@@ -3,15 +3,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp
 public class GamepadTesting_JF extends OpMode {
+    private DcMotor motor1;
     double Speed = -gamepad1.left_stick_y * 0.5;
     double X = gamepad1.right_stick_x;
     double Y = gamepad1.right_stick_y;
 
     @Override
     public void init(){
+        motor1  = hardwareMap.get(DcMotor.class, "testMotor1");
     }
 
     @Override
@@ -37,6 +39,12 @@ public class GamepadTesting_JF extends OpMode {
             Speed = Speed * 2;
         } else {
             Speed = 0.5;
+        }
+
+        //if the driver presses b then run motor 1
+        if (gamepad1.b) {
+            motor1.setPower(1);
+
         }
 
         //Crazy mode
