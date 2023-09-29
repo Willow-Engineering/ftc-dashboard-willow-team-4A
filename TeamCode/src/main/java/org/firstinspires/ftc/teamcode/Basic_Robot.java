@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Basic_Robot")
 //@Disabled
-public class Basic_Robot extends LinearOpMode {
+public class Basic_Robot extends LieftrignearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
