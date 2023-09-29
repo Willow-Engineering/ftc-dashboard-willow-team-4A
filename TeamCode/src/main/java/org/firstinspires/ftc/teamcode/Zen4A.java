@@ -2,16 +2,22 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @TeleOp
 public class Zen4A extends OpMode {
+    private DcMotor motor1;
     double Speed = -gamepad1.left_stick_y * 0.5;
     double X = gamepad1.right_stick_x;
     double Y = gamepad1.right_stick_y;
 
     @Override
     public void init() {
+<<<<<<< HEAD
+        motor1  = hardwareMap.get(DcMotor.class, "testMotor1");
+=======
+>>>>>>> 62e4dbbcb86fb9d62cb60fa82b6e711cc8b5b530
     }
 
     @Override
@@ -31,6 +37,10 @@ public class Zen4A extends OpMode {
             Speed = Speed * 2;
         } else {
             Speed = 0.5;
+        }
+        //if driver presses b press motor `
+        if (gamepad1.b) {
+            motor1.setPower(1);
         }
 
         //Crazy mode
