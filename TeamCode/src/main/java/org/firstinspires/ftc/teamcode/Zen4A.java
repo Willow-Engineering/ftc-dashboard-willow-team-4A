@@ -14,10 +14,10 @@ public class Zen4A extends OpMode {
 
     @Override
     public void init() {
-<<<<<<< HEAD
+
         motor1  = hardwareMap.get(DcMotor.class, "testMotor1");
-=======
->>>>>>> 62e4dbbcb86fb9d62cb60fa82b6e711cc8b5b530
+
+
     }
 
     @Override
