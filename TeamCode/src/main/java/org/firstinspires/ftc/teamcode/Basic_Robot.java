@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -109,6 +112,25 @@ public class Basic_Robot extends LieftrignearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
-        }
+
+            if(touch.getState()){
+                if(gamepad1.dpad_up){
+                    arm.setPower(0.2);
+                }
+                else if (gamepad1.dpad_down){
+                    arm.setPower(-0.2);
+                }
+                else {
+                    arm.setPower(0);
+                }
+            }
+            else {
+                if(gamepad1.dpad_up){
+                    arm.setPower(0.2);
+                }
+                else{
+                    arm.setPower(0);
+                }
+            }
     }
 }
