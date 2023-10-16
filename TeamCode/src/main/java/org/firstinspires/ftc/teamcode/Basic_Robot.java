@@ -29,14 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -54,14 +51,15 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp (name="Basic_Robot")
-public class Basic_Robot extends LinearOpMode {
+@TeleOp (name="Basic_robot")
+public class Basic_robot extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotorEx arm = null;
+    private DigitalChannel touch = null;
 
     @Override
     public void runOpMode() {
@@ -73,7 +71,8 @@ public class Basic_Robot extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        arm = hardwareMap.get()
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        touch = hardwareMap.get(DigitalChannel.class, "touch");
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -107,7 +106,6 @@ public class Basic_Robot extends LinearOpMode {
                         arm.setPower(0.2);
                     } else {
                         arm.setPower(0);
-
                         // Setup a variable for each drive wheel to save power level for telemetry
                         double leftPower;
                         double rightPower;
@@ -143,3 +141,4 @@ public class Basic_Robot extends LinearOpMode {
             }
         }
     }
+}
