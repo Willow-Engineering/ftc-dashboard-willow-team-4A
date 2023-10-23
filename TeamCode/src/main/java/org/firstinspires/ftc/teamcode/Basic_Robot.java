@@ -63,14 +63,15 @@ public class Basic_robot extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftDrive = hardwareMap.get(DcMotor.class, "left_Drive");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_Drive");
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         touch = hardwareMap.get(DigitalChannel.class, "touch");
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
