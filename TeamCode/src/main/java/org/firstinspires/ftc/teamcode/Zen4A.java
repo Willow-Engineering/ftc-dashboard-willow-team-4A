@@ -1,61 +1,99 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
+@TeleOp(name="Zen4A", group="Linear OpMode")
+public class Zen4A extends LinearOpMode {
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
+    private DcMotorEx arm = null;
+    private DigitalChannel touch = null;
+    Servo leftIntake;
+    Servo rightIntake;
 
-@TeleOp
-public class Zen4A extends OpMode {
-    private DcMotor motor1;
-    double Speed = -gamepad1.left_stick_y * 0.5;
-    double X = gamepad1.right_stick_x;
-    double Y = gamepad1.right_stick_y;
+    public void runOpMode(){
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
-    @Override
-    public void init() {
+        leftDrive  = hardwareMap.get(DcMotor.class, "leftDrive");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
+        arm = (DcMotorEx) hardwareMap.get(DcMotor.class, "arm");
+        leftIntake = hardwareMap.get(Servo.class, "leftIntake");
+        rightIntake = hardwareMap.get(Servo.class, "rightIntake");
+        touch = hardwareMap.get(DigitalChannel.class, "touch");
 
-        motor1  = hardwareMap.get(DcMotor.class, "testMotor1");
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        waitForStart();
+        runtime.reset();
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        while (opModeIsActive()){
+            double drive = -gamepad1.left_stick_y;
+            double turn = gamepad1.left_stick_x;
 
-    }
+            double leftPower = Range.clip(drive + turn, -1.0, 1.0);
+            double rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
-    @Override
-    public void loop() {
-        if (gamepad1.left_stick_y < -0.5) {
-            telemetry.addData("Left stick", " is negative and large");
-        } else if (gamepad1.left_stick_y < 0) {
-            telemetry.addData("Left stick", " is negative and small");
-        } else if (gamepad1.left_stick_y < 0.5) {
-            telemetry.addData("Left stick", " is positive and small");
-        } else {
-            telemetry.addData("Left stick", " is positive and large");
-        }
+            double leftIntakePos = -.1 * gamepad1.right_trigger + .5;
+            double rightIntakePos = .1 * gamepad1.right_trigger + .5;
 
-        //Turbo Mode
-        if (gamepad1.a) {
-            Speed = Speed * 2;
-        } else {
-            Speed = 0.5;
-        }
-        //if driver presses b press motor `
-        if (gamepad1.b) {
-            motor1.setPower(1);
-        }
+            leftDrive.setPower(leftPower);
+            rightDrive.setPower(rightPower);
 
-        //Crazy mode
-        if (gamepad1.a) {
-            if (gamepad1.right_stick_y > 0) {
-                telemetry.addData("Y ", X);
-
+            if (!touch.getState()) {
+                if(gamepad1.right_bumper){
+                    arm.setVelocity(-300);
+                }
+                else{
+                    arm.setVelocity(0);
+                }
+            }
+            else if(touch.getState()){
+                if(gamepad1.right_bumper){
+                    arm.setVelocity(-300);
+                }
+                else if(gamepad1.left_bumper){
+                    arm.setVelocity(300);
+                }
             }
 
-            if (gamepad1.right_stick_x > 0) {
-                telemetry.addData("X", Y);
+            if(gamepad1.a) {
+                arm.setTargetPosition(-1500);
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm.setVelocity(300);
             }
-        } else {
-            telemetry.addData("X", X);
-            telemetry.addData("Y", Y);
+            else if(gamepad1.b) {
+                arm.setTargetPosition(-750);
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm.setVelocity(300);
+            }
+            else {
+                arm.setVelocity(0);
+            }
+            leftIntake.setPosition(leftIntakePos);
+            rightIntake.setPosition(rightIntakePos);
+
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Intake", "left (%.2f), right (%.2f)", leftIntake.getPosition(), rightIntake.getPosition());
         }
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Arm Position,", arm.getCurrentPosition());
+        telemetry.addData("Triggers", "left (%.2f), right (%.2f)", gamepad1.left_trigger, gamepad1.right_trigger);
+        telemetry.update();
+
     }
 }
