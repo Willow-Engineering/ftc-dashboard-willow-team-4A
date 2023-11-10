@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -40,11 +40,12 @@ public class Run_Robot extends LinearOpMode {
         leftServo = hardwareMap.get(Servo.class, "LeftServo");
         rightServo = hardwareMap.get(Servo.class, "RightServo");
         touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        armDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftServo.setDirection(Servo.Direction.FORWARD);
-        rightServo.setDirection(Servo.Direction.FORWARD);
+        //armDrive.setDirection(DcMotor.Direction.REVERSE);
+        //leftServo.setDirection(Servo.Direction.FORWARD);
+        //rightServo.setDirection(Servo.Direction.FORWARD);
 
 
 
@@ -57,6 +58,18 @@ public class Run_Robot extends LinearOpMode {
         armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         while (opModeIsActive()) {
+
+            double leftPower;
+            double rightPower;
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
+            double sensorValue = touchSensor.getValue();
+
+            leftDrive.setPower(leftPower);
+            rightDrive.setPower(rightPower);
 
             if(gamepad1.a) {
                 armDrive.setTargetPosition((int) armDrivePosUp);
@@ -83,17 +96,6 @@ public class Run_Robot extends LinearOpMode {
             if (touchSensor.isPressed()) {
                 telemetry.addData("Touching ", "Something");
             }
-            double leftPower;
-            double rightPower;
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-
-            double sensorValue = touchSensor.getValue();
-
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
 
             telemetry.addData("Arm Test", armDrive.getCurrentPosition());
             telemetry.addData("Status", "Run Time: " + runtime.toString());
