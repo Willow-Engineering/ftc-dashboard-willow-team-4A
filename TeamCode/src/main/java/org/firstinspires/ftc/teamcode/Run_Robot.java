@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -21,12 +20,11 @@ public class Run_Robot extends LinearOpMode {
     private DcMotorEx armDrive = null;
     private Servo leftServo = null;
     private Servo rightServo = null;
-    private TouchSensor touchSensor;
     public static double rightServoPosOpen = 1;
     public static double leftServoPosOpen = 0;
-    public static double rightServoPosClose = 0.8;
-    public static double leftServoPosClose = 0.2;
-    public static double armDrivePosUp = 150;
+    public static double rightServoPosClose = -0.2;
+    public static double leftServoPosClose = 0.8;
+    public static double armDrivePosUp = -150;
     public static double armDrivePosDown = 150;
 
 
@@ -39,7 +37,6 @@ public class Run_Robot extends LinearOpMode {
         armDrive = hardwareMap.get(DcMotorEx.class, "ArmMotor");
         leftServo = hardwareMap.get(Servo.class, "LeftServo");
         rightServo = hardwareMap.get(Servo.class, "RightServo");
-        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
 
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -66,8 +63,6 @@ public class Run_Robot extends LinearOpMode {
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
-            double sensorValue = touchSensor.getValue();
-
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
 
@@ -93,16 +88,12 @@ public class Run_Robot extends LinearOpMode {
                 rightServo.setPosition(rightServoPosClose);
                 leftServo.setPosition(leftServoPosClose);
             }
-            if (touchSensor.isPressed()) {
-                telemetry.addData("Touching ", "Something");
-            }
 
             telemetry.addData("Arm Test", armDrive.getCurrentPosition());
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.addData("LeftServo", leftServo.getPosition());
             telemetry.addData("RightServo", rightServo.getPosition());
-            telemetry.addData("Touch Sensor", touchSensor.isPressed());
             telemetry.update();
         }
     }
