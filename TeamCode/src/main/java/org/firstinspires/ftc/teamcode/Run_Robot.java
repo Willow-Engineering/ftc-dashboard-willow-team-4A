@@ -58,6 +58,8 @@ public class Run_Robot extends LinearOpMode {
 
             double leftPower;
             double rightPower;
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
@@ -65,20 +67,25 @@ public class Run_Robot extends LinearOpMode {
             rightDrive.setPower(rightPower);
 
             if(gamepad1.a) {
+                armDrive.setTargetPosition((int) armDrivePosUp);
                 armDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 armDrive.setVelocity(150);
             }
             if(gamepad1.b) {
+                armDrive.setTargetPosition((int) armDrivePosDown);
                 armDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                 armDrive.setVelocity(150);
             }
             if(gamepad1.start) {
+                armDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
             if(gamepad1.dpad_left){
+                rightServo.setPosition(rightServoPosOpen);
                 leftServo.setPosition(leftServoPosOpen);
             }
             if(gamepad1.dpad_right){
+                rightServo.setPosition(rightServoPosClose);
                 leftServo.setPosition(leftServoPosClose);
             }
 
